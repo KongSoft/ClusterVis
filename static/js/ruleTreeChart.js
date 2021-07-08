@@ -311,46 +311,46 @@ function drawRuleTreeChart(data,k){
                 let tmp = $("#select_Tree").val();
 
 
-                    if(d.children == null)
-
-                    {
-                        layer.msg("改变类别",{
-                            btn:["归入该类","剔除出类"],
-                            yes:function () {
-                                let Changetype = d.data.typeInfo;
-                                for(let i =0;i<Changetype.length;i++)
-                                {
-                                    Changetype[i][k]=1;
-                                }
-                                showRuleResult(k);
-                                drawBasicScatter();
-                                dTable.upDataType();
-                                drawOverlapType();
-
-                            },
-                            btn2:function () {
-                                 let Changetype = d.data.typeInfo;
-                                for(let i =0;i<Changetype.length;i++)
-                                {
-                                    Changetype[i][k]=0;
-                                }
-                                showRuleResult(k);
-                                drawBasicScatter();
-                                dTable.upDataType();
-                                drawOverlapType();
-                            }
-                        });
-
-                    }
-                    else
-                    {
-                        toggle(d);
-                        generateTree(root);
-                        chart.renderNode();
-                        chart.renderLines();
-                        chart.renderText();
-                        chart.addMouseOn();
-                    }
+                    // if(d.children == null)
+                    //
+                    // {
+                    //     layer.msg("改变类别",{
+                    //         btn:["归入该类","剔除出类"],
+                    //         yes:function () {
+                    //             let Changetype = d.data.typeInfo;
+                    //             for(let i =0;i<Changetype.length;i++)
+                    //             {
+                    //                 Changetype[i][k]=1;
+                    //             }
+                    //             showRuleResult(k);
+                    //             drawBasicScatter();
+                    //             dTable.upDataType();
+                    //             drawOverlapType();
+                    //
+                    //         },
+                    //         btn2:function () {
+                    //              let Changetype = d.data.typeInfo;
+                    //             for(let i =0;i<Changetype.length;i++)
+                    //             {
+                    //                 Changetype[i][k]=0;
+                    //             }
+                    //             showRuleResult(k);
+                    //             drawBasicScatter();
+                    //             dTable.upDataType();
+                    //             drawOverlapType();
+                    //         }
+                    //     });
+                    //
+                    // }
+                    // else
+                    // {
+                    //     toggle(d);
+                    //     generateTree(root);
+                    //     chart.renderNode();
+                    //     chart.renderLines();
+                    //     chart.renderText();
+                    //     chart.addMouseOn();
+                    // }
 
 
 
