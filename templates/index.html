@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="UTF-8">
+    <title>重叠聚类可视分析</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <script src="/static/js/jquery-3.5.0.min.js"></script>
+    <script src="/static/layui/layui.js"></script>
+    <script src="/static/js/d3.v5.js"></script>
+     <script>
+        document.write('<script src="./static/js/dataBaseOP.js?adv='+Math.random()+'"><\/script>');
+        document.write('<script src="/static/js/chart.js?adv='+Math.random()+'"><\/script>');
+        document.write('<script src="/static/js/basicTreeChart.js?adv='+Math.random()+'"><\/script>');
+        document.write('<script src="/static/js/basicRiver.js?adv='+Math.random()+'"><\/script>');
+        document.write('<script src="/static/js/parallelLineChart.js?adv='+Math.random()+'"><\/script>');
+        document.write('<script src="/static/js/basicScatter.js?adv='+Math.random()+'"><\/script>');
+        document.write('<script src="/static/js/dataTable.js?adv='+Math.random()+'"><\/script>');
+        document.write('<script src="/static/js/basicPieChart.js?adv='+Math.random()+'"><\/script>');
+        document.write('<script src="/static/js/basicOP.js?adv='+Math.random()+'"><\/script>');
+        document.write('<script src="/static/js/ruleTreeChart.js?adv='+Math.random()+'"><\/script>');
+        document.write('<script src="/static/js/ruleInfo.js?adv='+Math.random()+'"><\/script>');
+        document.write('<script src="/static/js/ruletype.js?adv='+Math.random()+'"><\/script>');
+        </script>
+       <style>
+        /*关键设置 tbody出现滚动条*/
+        table tbody {
+            display: block;
+            height: 250px;
+            overflow-y: scroll;
+        }
+        table thead,
+        tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+        /*关键设置：滚动条默认宽度是16px 将thead的宽度减16px*/
+        table thead {
+            width: calc( 100% - 1em)
+        }
+
+    </style>
+</head>
+<body >
+<div class="layui-container layui-bg-gray" >
+    <div class="layui-row" style="padding-top: 10px">
+        <form class="layui-form layui-form-pane" action="">
+            <div class="layui-col-lg2 layui-col-lg-offset1" id="uploadDiv">
+                <button type="button" class="layui-btn" id="uploadFile"><i class="layui-icon"></i>数据录入</button>
+            </div>
+            <div class="layui-col-lg2">
+                <div class="layui-form-item" style="margin-left: 20px">
+                    <label class="layui-form-label">聚类个数</label>
+                    <div class="layui-input-block">
+                      <input type="text"  id="cluster_num" lay-verify="required" value="2" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+             <div class="layui-col-lg2">
+                <div class="layui-form-item" style="margin-left: 20px">
+                    <label class="layui-form-label">覆盖范围</label>
+                    <div class="layui-input-block">
+                      <input type="text" id="cluster_Overlap" lay-verify="required" value="0.1" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-lg2" >
+                <div class="layui-form-item" style="margin-left: 20px">
+                    <label class="layui-form-label">异常比例</label>
+                    <div class="layui-input-block">
+                      <input type="text" id="cluster_Outlier" lay-verify="required" value="0" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-lg2 layui-col-lg-offset1" >
+                <button type="button" class="layui-btn" onclick="showClusterResult();" >聚类分析</button>
+            </div>
+        </form>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-lg3">
+            <div class="layui-row" style="margin: 1px">
+                <div class="layui-card">
+                    <div class="layui-card-header "> 投影视图
+                        <div style="float: right">
+                             <select id="select_Projection" onchange="drawBasicScatter()">
+                                <option value="0" selected="">PCA投影</option>
+                                <option value="2">TSNE投影</option>
+                             </select>
+                        </div>
+
+                    </div>
+                    <div class="layui-card-body">
+                      <div id="scatterView" style="width: 250px;height: 250px;">
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row" style="margin: 1px">
+                <div class="layui-card">
+                    <div class="layui-card-header "> 类簇信息
+                        <div style="float: right">
+
+                        </div>
+                    </div>
+                    <div class="layui-card-body">
+
+                      <div id="ruleTypeView" style="width: 250px;height: 250px;">
+                      </div>
+                        <div >&nbsp;置信度：<input style="width: 20px"/>&nbsp;
+
+                            支持度：<input style="width: 20px"/>&nbsp;&nbsp;&nbsp;
+                             <button>&nbsp;过滤&nbsp;</button></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div id="stateInfoView">
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-lg6">
+            <div class="layui-row" style="margin: 1px">
+                <div class="layui-card">
+                    <div class="layui-card-header"> 规则树图
+                       <!-- <div style="float:right;">
+                            <select id="select_Tree" onchange="">
+                                <option value="0" >支持度</option>
+                                <option value="1" selected="">置信度</option>
+                                <option value="0" selected="">紧凑度</option>
+                            </select>
+
+                        </div>-->
+                    </div>
+                    <div class="layui-card-body">
+                        <div id="ruleTreeView" style="width: 540px;height: 480px;">
+
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row" style="margin: 1px">
+                <div class="layui-card">
+                    <div class="layui-card-header"> 规则信息图
+                       <!-- <div style="float:right;">
+                            <select id="select_Tree" onchange="">
+                                <option value="0" >支持度</option>
+                                <option value="1" selected="">置信度</option>
+                                <option value="0" selected="">紧凑度</option>
+                            </select>
+
+                        </div>-->
+                    </div>
+                    <div class="layui-card-body">
+                        <div id="ruleTreeView" style="width: 540px;height: 80px;">
+
+                         </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div id="typeInfoView">
+
+            </div>
+        </div>
+        <div class="layui-col-lg3">
+            <div class="layui-row" style="margin: 1px">
+                <div class="layui-card">
+                    <div class="layui-card-header">属性分析图
+                        <div style="float:right;">分割属性：
+                            <select id="select_Attribute" onchange="">
+                                <option value="0" >x1</option>
+                                <option value="1" selected="">x2</option>
+                                <option value="2" selected="">x3</option>
+                                <option value="3" selected="">x4</option>
+                                <option value="4" selected="">x5</option>\
+                                 <option value="5" selected="">x6</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-card-body">
+                         <div>
+                            分割下限：<input id="min_value" style="width: 30px"  />
+                            分割上限：<input id="max_value"  style="width: 30px" />
+                            <button onclick="splitNode();" style="width: 35px">分割</button>
+                        </div>
+                        <div id="streamView" style="width: 270px;min-height: 600px;">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="layui-row">
+                 <div class="layui-card">
+                    <div class="layui-card-header"> 数据表格
+                        <div style="float:right;">
+                            <select id="select_Tree" onchange="">
+                                <option value="0" >支持度</option>
+                                <option value="1" selected="">置信度</option>
+                                <option value="0" selected="">紧凑度</option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="layui-card-body">
+                       <table class="layui-table" lay-skin="line">
+                           <thead>
+
+                           </thead>
+                           <tbody style="height: 144px" >
+
+                           </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+</div>
+</body>
+<script>
+    var featureNames = [];//特征名称序列
+    var n_feature = 0;//特征个数
+    var dataSet= [];//聚类数据集，行为记录数目，列为特征数目
+    var typeList = [];//字符串类型类别分布1_2
+    var typeArray = [];//数组类型类别表示
+    var showData = [];
+    var tableData = [];
+    var typeList = [];
+    var typeArray = [];
+    var centerPoint = [];
+    var dTable = new dataTable();
+
+    var n_cluster = 0;
+    var k_cluster =0;
+    var version = 0;
+    var rules;
+    var ruleIndex;
+    var typek = 0;
+    var typeInfo =[];
+    var Denode = function (id,data,feature, threshold, children,typeInfo,rule) {
+        this.id = id;//节点ID
+        this.num = 0;//节点含有样本个数
+        this.data=data;//节点包含的数据样本
+        this.feature = feature;//分割属性
+        this.threshold = threshold;//该节点的分割值
+        this.max_threshold = threshold+10;//该节点的分割值
+        this.children = children;//子节点，第一个为左节点，第二个为右节点
+        this.rule = rule;//到该节点的分类规则
+        this.typeInfo = typeInfo;//节点包含数据样本的类别信息
+        this.text = "";//该节点展示的内容
+        this.brotherOrder = 0;//该节点的兄弟序号
+        this.indexArray = [];//该节点样本
+    };
+    var ruleTreeList = [];
+    var ruleList = [];
+    var changeNode;
+    layui.use('upload', function() {
+        var  upload = layui.upload;
+        upload.render({
+            elem: '#uploadFile'
+            ,url: 'http://127.0.0.1:8000/upload_file/' //改成您自己的上传接口
+            ,accept:"file"
+            ,done: function(res){
+                doUPLoadFile(res);
+            }
+        });
+    });
+    layui.use('form', function(){
+    });
+    layui.use('layer', function(){
+        var layer = layui.layer;
+    });
+    layui.use('element', function(){
+        var element = layui.element;
+    });
+//drawParallelLineChart();
+</script>
+</html>
