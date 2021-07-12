@@ -216,8 +216,11 @@ function splitNode() {
     changeNode.feature =  $("#select_Attribute").val();
     changeNode.threshold = $("#min_value").val();
     changeNode.max_threshold = $("#max_value").val();
-    if (changeNode.children == null || changeNode.children.length==0)
-    {
-        new Denode(changeNode.id+2,[],feature[i], threshold[i],[],[],"")
-    }
+    changeNode.children = [];
+    let tmpLeftNode = new Denode(changeNode.id+2,[],null, null,[],[],"");
+    let tmpRightNode= new Denode(changeNode.id+3,[],null, null,[],[],"");
+    changeNode.children.push(tmpLeftNode);
+    changeNode.children.push(tmpRightNode);
+    drawRuleTree(changeNode,typek);
+    drawRuleTreeChart(ruleTreeList[typek],typek);
 }

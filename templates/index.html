@@ -19,6 +19,7 @@
         document.write('<script src="/static/js/ruleTreeChart.js?adv='+Math.random()+'"><\/script>');
         document.write('<script src="/static/js/ruleInfo.js?adv='+Math.random()+'"><\/script>');
         document.write('<script src="/static/js/ruletype.js?adv='+Math.random()+'"><\/script>');
+        document.write('<script src="/static/js/ruleInfoChart.js?adv='+Math.random()+'"><\/script>');
         </script>
        <style>
         /*关键设置 tbody出现滚动条*/
@@ -113,11 +114,6 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-row">
-                <div id="stateInfoView">
-
-                </div>
-            </div>
         </div>
         <div class="layui-col-lg6">
             <div class="layui-row" style="margin: 1px">
@@ -152,17 +148,20 @@
                         </div>-->
                     </div>
                     <div class="layui-card-body">
-                        <div id="ruleTreeView" style="width: 540px;height: 80px;">
-
-                         </div>
+                        <div id="ruleInfoView" style="width: 540px;height: 100px; overflow: scroll">
+                            <div style="width:100px;display: inline-block;border-style: solid;border-width: 1px"><div>x1</div>
+                                <div>
+                                    svg
+                                </div>
+                            </div>
+                            <div style="width:100px;display: inline-block"><div>x2</div>
+                                <div>
+                                    svg
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-
-
-            <div id="typeInfoView">
-
             </div>
         </div>
         <div class="layui-col-lg3">
@@ -194,7 +193,7 @@
             </div>
         </div>
     </div>
-     <div class="layui-row">
+    <div class="layui-row">
                  <div class="layui-card">
                     <div class="layui-card-header"> 数据表格
                         <div style="float:right;">
@@ -254,6 +253,7 @@
         this.text = "";//该节点展示的内容
         this.brotherOrder = 0;//该节点的兄弟序号
         this.indexArray = [];//该节点样本
+        this.ruleArray= [];
     };
     var ruleTreeList = [];
     var ruleList = [];
