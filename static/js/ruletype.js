@@ -40,7 +40,7 @@ function drawOverlapType(){
         context+=typeInfo[i][i]+",";
     }
     context+="异常值个数为"+out_num+"覆盖度为："+count/typeArray.length+"异常值比率为："+out_num/typeArray.length;
-    d3.select("#stateInfoView").text(context);
+    // d3.select("#stateInfoView").text(context);
     $("#cluster_Overlap").val((count/typeArray.length-1).toFixed(2))
     var maxNum =0;
     for(let i =0;i<k;i++){
@@ -173,6 +173,15 @@ function drawOverlapType(){
         d3.selectAll('.type').on('click',function (d,i) {
                 typek = i;
                 drawRuleTreeChart(ruleTreeList[typek],typek);
+
+                d3.select("#ruleInfoView").selectAll("div").remove();
+                divs = d3.select("#ruleInfoView");
+                for (j=0;j<ruleList[typek].length;j++)
+                {
+                    div = divs.append("div");
+                    drawRuleInfo(ruleList[typek][j],div);
+                }
+
                 d3.select("#streamView").selectAll("div").remove();
                 divs =d3.select("#streamView");
                 for (i= 0;i<n_feature;i++)
