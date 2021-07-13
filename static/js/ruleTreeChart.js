@@ -64,7 +64,7 @@ function drawRuleTree(dectree_tmp,k) {
         let left_sub_typeInfo=[];
         let left_sub_index = [];
         for (var j = 0;j<dectree_tmp.data.length;j++) {
-            if (dectree_tmp.data[j][dectree_tmp.feature] <= dectree_tmp.threshold) {
+            if (dectree_tmp.data[j][dectree_tmp.feature] >=dectree_tmp.threshold &&dectree_tmp.data[j][dectree_tmp.feature] <= dectree_tmp.max_threshold) {
                 left_sub_data.push(dectree_tmp.data[j]);
                 left_sub_typeInfo.push(dectree_tmp.typeInfo[j]);
                 left_sub_index.push(j);
@@ -83,12 +83,12 @@ function drawRuleTree(dectree_tmp,k) {
         dectree_tmp.children[0].typeInfo = left_sub_typeInfo;
         dectree_tmp.children[0].indexArray = left_sub_index--;
         dectree_tmp.children[0].num = getTypeNum(left_sub_typeInfo,k);
-        dectree_tmp.children[0].text = featureNames[dectree_tmp.feature]+"<="+dectree_tmp.threshold;
+        dectree_tmp.children[0].text = dectree_tmp.threshold+"<="+featureNames[dectree_tmp.feature]+"<="+dectree_tmp.max_threshold;
         dectree_tmp.children[0].brotherOrder = 0;
         if (dectree_tmp.rule=="")
-           dectree_tmp.children[0].rule = featureNames[dectree_tmp.feature]+"<="+dectree_tmp.threshold;
+           dectree_tmp.children[0].rule = dectree_tmp.children[0].text;
         else
-            dectree_tmp.children[0].rule = dectree_tmp.rule+" && " +featureNames[dectree_tmp.feature]+"<="+dectree_tmp.threshold;
+            dectree_tmp.children[0].rule = dectree_tmp.rule+" && " +dectree_tmp.children[0].text ;
         leftruleElement = {};
         leftruleElement.feature = dectree_tmp.feature;
         leftruleElement.threshold = dectree_tmp.threshold;

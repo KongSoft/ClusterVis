@@ -213,7 +213,8 @@ function setInType() {
     drawOverlapType();
 }
 function splitNode() {
-    changeNode.feature =  $("#select_Attribute").val();
+    alert($("#select_Attribute").val());
+    changeNode.feature = $("#select_Attribute").val();
     changeNode.threshold = $("#min_value").val();
     changeNode.max_threshold = $("#max_value").val();
     changeNode.children = [];
@@ -222,5 +223,17 @@ function splitNode() {
     changeNode.children.push(tmpLeftNode);
     changeNode.children.push(tmpRightNode);
     drawRuleTree(changeNode,typek);
+    rules = [];
+    getRuleNode(ruleTreeList[typek],typek);
+    ruleList[typek]= rules;
+
     drawRuleTreeChart(ruleTreeList[typek],typek);
+
+    d3.select("#ruleInfoView").selectAll("div").remove();
+    divs = d3.select("#ruleInfoView");
+    for (j=0;j<ruleList[typek].length;j++)
+    {
+        div = divs.append("div");
+        drawRuleInfo(ruleList[typek][j],div);
+    }
 }
