@@ -62,6 +62,7 @@ function showRuleResult(k){
             makeRuleTreeData(feature,right,left,threshold,k);
             drawRuleTree(ruleTreeList[k],k);
             rules = [];
+            resetRuleTypeArray(k);
             getRuleNode(ruleTreeList[k],k);
             ruleList.push(rules);
         }
@@ -100,6 +101,12 @@ function showClusterResult(){
                 n_cluster = a;
                 trees = dataRes.trees;
                 drawBasicScatter();
+                for(let i =0;i<typeArray.length;i++)
+                {
+                    ruleTypeArray[i] = [];
+                    for (let j =0;j<typeArray[0].length;j++)
+                        ruleTypeArray[i].push(0);
+                }
                 typek = 0;
                 ruleTreeList = [];
                 ruleList = [];
@@ -114,7 +121,9 @@ function showClusterResult(){
                     }
                     makeRuleTreeData(feature,right,left,threshold,i);
                     drawRuleTree(ruleTreeList[i],i);
+
                     rules = [];
+                    resetRuleTypeArray(i);
                     getRuleNode(ruleTreeList[i],i);
                     ruleList.push(rules);
                 }
@@ -213,7 +222,6 @@ function setInType() {
     drawOverlapType();
 }
 function splitNode() {
-    alert($("#select_Attribute").val());
     changeNode.feature = $("#select_Attribute").val();
     changeNode.threshold = $("#min_value").val();
     changeNode.max_threshold = $("#max_value").val();
@@ -224,6 +232,7 @@ function splitNode() {
     changeNode.children.push(tmpRightNode);
     drawRuleTree(changeNode,typek);
     rules = [];
+    resetRuleTypeArray(typek);
     getRuleNode(ruleTreeList[typek],typek);
     ruleList[typek]= rules;
 
@@ -231,7 +240,7 @@ function splitNode() {
 
     d3.select("#ruleInfoView").selectAll("div").remove();
     divs = d3.select("#ruleInfoView");
-    for (j=0;j<ruleList[typek].length;j++)
+    for (let j=0;j<ruleList[typek].length;j++)
     {
         div = divs.append("div");
         drawRuleInfo(ruleList[typek][j],div);

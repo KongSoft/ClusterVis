@@ -245,8 +245,8 @@
         this.num = 0;//节点含有样本个数
         this.data=data;//节点包含的数据样本
         this.feature = feature;//分割属性
-        this.threshold = threshold;//该节点的分割值
-        this.max_threshold = threshold+10;//该节点的分割值
+        this.threshold =0;//该节点的分割值
+        this.max_threshold = parseFloat(threshold).toFixed(2);//该节点的分割值
         this.children = children;//子节点，第一个为左节点，第二个为右节点
         this.rule = rule;//到该节点的分类规则
         this.typeInfo = typeInfo;//节点包含数据样本的类别信息
@@ -254,10 +254,12 @@
         this.brotherOrder = 0;//该节点的兄弟序号
         this.indexArray = [];//该节点样本
         this.ruleArray= [];
+        this.ruleTypeArray=[];
     };
     var ruleTreeList = [];
     var ruleList = [];
     var changeNode;
+    var ruleTypeArray = [];
     layui.use('upload', function() {
         var  upload = layui.upload;
         upload.render({

@@ -126,13 +126,18 @@ function drawRuleInfoChart(data,type,rule,div,k) {
             .attr("stroke-width",1)
             .attr('stroke',chart._colors[0])
         ;
+        let showtext = "";
+        if (rule.flag)
+            showtext = rule.threshold+"<="+featureNames[rule.feature]+"<="+rule.max_threshold;
+        else
+            showtext = featureNames[rule.feature]+"<"+rule.threshold+"&&"+featureNames[rule.feature]+">"+rule.max_threshold
         chart.svg().append('text')
                             .attr('class', 'axisText')
                             .attr('x', 10)
                             .attr('y', 10)
                             .attr('fill', config.textColor)
                             .attr('dy', 0)
-                            .text(rule.threshold+"<="+featureNames[rule.feature]+"<="+rule.max_threshold);
+                            .text(showtext);
 
         // d3.select('.yAxis').append('text')
         //                     .attr('class', 'axisText')
